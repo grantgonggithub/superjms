@@ -1,7 +1,7 @@
 package org.superjms.rpc;
 
 /**
- * Copyright(C) 2020 顺兴文旅版权所有
+ * Copyright (C) 2022 SuperJMS (Grant 巩建春)  本软件的所有源码都可以免费的进行学习交流,切勿用于商业用途
  *
  * @ProductName superjms
  * @PackageName org.superjms.rpc

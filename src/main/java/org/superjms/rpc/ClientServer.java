@@ -2,14 +2,14 @@ package org.superjms.rpc;
 
 import org.superjms.rpc.router.RouterType;
 
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Copyright(C) 2020 顺兴文旅版权所有
+ * Copyright (C) 2022 SuperJMS (Grant 巩建春)  本软件的所有源码都可以免费的进行学习交流,切勿用于商业用途
  *
  * @ProductName superjms
  * @PackageName org.superjms.rpc
@@ -55,13 +55,52 @@ public class ClientServer {
     }
 
     public ClientItem[] get_clients() {
+        Lock lock = readWriteLock.readLock();
         try {
-
+            if(lock.tryLock(80, TimeUnit.MILLISECONDS)){
+                return clients.values().toArray(new ClientItem[0]);
+            }else{
+                return new ClientItem[0];
+            }
         } catch (Exception ex) {
+            return new ClientItem[0];
         }
-        return _clients;
+        finally {
+            lock.unlock();
+        }
     }
 
+    public void UpdateClient(ClientItem[] _clients,boolean update){
+        Lock lock= readWriteLock.writeLock();
+        try{
+            if(lock.tryLock(100,TimeUnit.MILLISECONDS)){
+                clients.clear();
+                Set<Map.Entry<String,ClientItem>> iterator = clients.entrySet();
+                for (Map.Entry<String,ClientItem> item : iterator){
+                    ClientItem itemValue=item.getValue();
+                    String key=String.format("%s_%s",itemValue.get_ip(),itemValue.get_port());
+                    clients.put(key,itemValue);
+                }
+            }
+
+        }catch (Exception ex){
+
+        }finally {
+            lock.unlock();
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return "ClientServer{" +
+                "readWriteLock=" + readWriteLock +
+                ", clients=" + clients +
+                ", _serverName='" + _serverName + '\'' +
+                ", _routerType=" + _routerType +
+                ", _clients=" + Arrays.toString(_clients) +
+                '}';
+    }
 /*    public void set_clients(ClientItem[] _clients) {
         this._clients = _clients;
     }*/
