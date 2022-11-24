@@ -1,0 +1,213 @@
+{
+  "ServerConfig": {
+    "RpcService": {
+      "Pool": 0,
+      "Ip": "192.168.7.*",
+      "Port": 0,
+      "PortList": {
+        "ApiDocument": 20000,
+        "HttpProxy": 20001,
+        "TestService": 20002,
+        "xxxxService": 20003
+      },
+      "ServerType": 2,
+      "AssemblyPath": null,
+      "TimeOut": 0,
+      "Enable": true
+    },
+    "ConfigCenter": {
+      "ConfigType": 1,
+      "Ip": "192.168.7.201:2181",
+      "SessionTimeout": 5000
+    }
+  },
+  "DataBase": {
+    "RefFile": "true",
+    "DbFile": "database.test_a.config",
+    "SqlFile": "sqlmap.config"
+  },
+  "NLog": {
+    "autoReload": false,
+    "throwConfigExceptions": true,
+    "internalLogLevel": "info",
+    "internalLogFile": "${basedir}/txtLog/internal-nlog.txt",
+    "extensions": [
+      {
+        "assembly": "NLog.Extensions.Logging"
+      }
+    ],
+    "default-wrapper": {
+      "type": "AsyncWrapper",
+      "overflowAction": "Block"
+    },
+    "targets": {
+      "all-file": {
+        "type": "File",
+        "layout": "${longdate}\r${uppercase:${level}}\r\n${event-properties:item=EventId_Name:whenEmpty=}\r\n${logger}|${callsite}\r\n${message}\r\n ${exception:format=tostring}\r\n-------------------------------------------------------------------\r\n",
+        "fileName": "${basedir}/txtLog/${shortdate}/${shortdate}.txt",
+        "archiveFileName": "${basedir}/txtLog/${shortdate}/{#}.txt",
+        "archiveAboveSize": "31457280",
+        "archiveNumbering": "DateAndSequence",
+        "archiveDateFormat": "yyyyMMddHH",
+        "encoding": "UTF-8"
+      },
+      "own-console": {
+        "type": "LimitingWrapper",
+        "interval": "00:00:01",
+        "messageLimit": 100,
+        "target": {
+          "type": "ColoredConsole",
+          "layout": "${longdate}\r${event-properties:item=EventId_Id:whenEmpty=}\r\n${uppercase:${level}}\r\n${logger}\r\n${message}\r\n${exception:format=tostring}${callsite}\r\n-------------------------------------------------------------------\r\n",
+          "rowHighlightingRules": [
+            {
+              "condition": "level == LogLevel.Error",
+              "foregroundColor": "Red"
+            },
+            {
+              "condition": "level == LogLevel.Fatal",
+              "foregroundColor": "Red",
+              "backgroundColor": "White"
+            }
+          ]
+        }
+      }
+    },
+    "rules": [
+      {
+        "logger": "*",
+        "minLevel": "Debug",
+        "writeTo": "all-file,own-console"
+      }
+    ]
+  },
+  "ConstKeyValue": {
+    "Items": [
+      {
+        "Key": "MaxHttpBody",
+        "Value": "104857600"
+      },
+      {
+        "Key": "TrackSql",
+        "Value": "true"
+      },
+      {
+        "Key": "appid",
+        "Value": "wx52b2ac957076d5f7"
+      },
+      {
+        "Key": "HttpProxy",
+        "Value": "http://192.168.7.207/v2_api/"
+      },
+      {
+        "Key": "secret",
+        "Value": "0e2dc135d3e0211731b9f5973f0e5fe6"
+      },
+      {
+        "Key": "mch_id",
+        "Value": "1593425041"
+      },
+      {
+        "Key": "LockTimeOut",
+        "Value": "30000"
+      }
+    ]
+  },
+  "RabbitMQ": {
+    "Host": [
+      {
+        "Name": "Default",
+        "Ip": "192.168.7.201",
+        "Port": 5672,
+        "UserName": "admin",
+        "PassWord": "admin",
+        "NoAckMsgCount": 3
+      }
+    ]
+  },
+  "RedisConfig": {
+    "Nodes": [
+      {
+        "NodeName": "default",
+        "IsMasterSlave": false,
+        "Items": [
+          {
+            "Pool": 1,
+            "IsMaster": false,
+            "Server": "192.168.7.201",
+            "Port": 6379,
+            "AllowAdmin": true,
+            "ConnectTimeout": 4000,
+            "Ssl": true,
+            "Pwd": "123456"
+          }
+        ]
+      },
+      {
+        "NodeName": "resource",
+        "IsMasterSlave": false,
+        "Items": [
+          {
+            "Pool": 1,
+            "IsMaster": false,
+            "Server": "192.168.7.201",
+            "Port": 6379,
+            "AllowAdmin": true,
+            "ConnectTimeout": 4000,
+            "Ssl": true,
+            "Pwd": "123456"
+          }
+        ]
+      }
+    ]
+  },
+  "HttpProxy": {
+    "Items": [
+      {
+        "Name": "HttpProxy"
+      },
+      {
+        "Name": "TestService"
+      },
+      {
+        "Name": "xxxxService"
+      }
+    ]
+  },
+  "FileServer": {
+    "Items": [
+      {
+        "Url": "http://192.168.7.207/file_server"
+      }
+    ]
+  },
+  "RpcClients": {
+    "Clients": [
+      {
+        "ServerName": "TestService",
+        "RouterType": 2,
+        "Items": [
+          {
+            "Pool": 1,
+            "Ip": "192.168.7.207",
+            "Port": 20002,
+            "ServerType": 2,
+            "Enable": true
+          }
+        ]
+      },
+      {
+        "ServerName": "xxxxService",
+        "RouterType": 2,
+        "Items": [
+          {
+            "Pool": 1,
+            "Ip": "192.168.7.207",
+            "Port": 20005,
+            "ServerType": 2,
+            "Enable": true
+          }
+        ]
+      }
+    ]
+  }
+}

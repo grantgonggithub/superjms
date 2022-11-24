@@ -5,21 +5,15 @@ package org.superjms.config;
  *
  * @ProductName superjms
  * @PackageName org.superjms.config
- * @ClassName ConfigType
+ * @ClassName IUpdateConfigAction
  * @Author grant (巩建春 e-mail : nnn987@126.com ;  QQ:406333743;   Tel:+86  15619212255)
- * @Date 2022/11/18 下午9:24
- * @Description 服务的配置类型
+ * @Date 2022/11/23 下午2:49
+ * @Description TODO
  */
-
-/*
-* 服务的配置类型
-* */
-public enum ConfigType {
-    Unknown,
-    /*本地配置*/
-    Local,
-    /*zookeeper配置*/
-    Zookeeper,
-    /*基于api的配置文件*/
-    HttpFile,
+public interface IUpdateConfigAction {
+    /**
+     * 统一的更新配置的接口
+     * @param configuration
+     */
+    public void Update(Configuration configuration);
 }

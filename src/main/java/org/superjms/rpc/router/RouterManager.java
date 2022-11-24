@@ -43,12 +43,13 @@ public class RouterManager {
         int newValue=0;
         do {
             newValue=next+1; // 先预+1；
-            if (newValue >= max || newValue < min) {
+            if (newValue > max || newValue < min) {
                next = newValue = min;// +1后的值不在要求的范围内，改成增加的起点
                 atomicInteger.set(next);
             }
         } // 比较next（上一次的值）和atomicInteger中的值是否一样，如果一样则设置为新值，不一样说明这个过程中被别的线程修改了重新计算，直到一样
         while (!atomicInteger.compareAndSet(next, newValue));
+        next=atomicInteger.get();
         return newValue;
     }
 
@@ -63,6 +64,6 @@ public class RouterManager {
      */
     public static int GetRandom(int min,int max) {
         random.setSeed(System.currentTimeMillis());
-        return random.nextInt(min, max);
+        return min+random.nextInt(max-min+1);
     }
 }
